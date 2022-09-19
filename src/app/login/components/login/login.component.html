@@ -1,5 +1,11 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <input type="text" formControlName="email" required/>
+  <input type="text"
+         formControlName="email"
+         required
+
+         [ngClass]="{'inputNotValid':  email!.invalid && (email!.dirty || email!.touched), 'inputValid': email!.valid, }"
+  />
+
   <div
     *ngIf="email!.invalid && (email!.dirty || email!.touched)"
     class="notValid">
