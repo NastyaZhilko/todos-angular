@@ -1,7 +1,3 @@
-<!--<h1> {{appTitle}}</h1>
-  <div *ngFor="let todo of todos$ | async">
-    Title: {{todo.title}} Order: {{todo.order}} Date added: {{todo.addedDate}}
-    <button (click)="deleteTodo(todo.id)">Remove todo</button>
-  </div>
-  <button (click)="createTodo()">Create todo</button>-->
-<todo-login></todo-login>
+<h1> {{appTitle}}</h1>
+<todo-navigation></todo-navigation>
+<router-outlet></router-outlet>

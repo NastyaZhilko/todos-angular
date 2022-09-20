@@ -1,49 +1,15 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
-import { BehaviorSubject, catchError, EMPTY, filter, map, Observable } from 'rxjs'
-import { environment } from '../../environments/environment.prod'
-import { BeatyLoggerServiceService } from './beaty-logger-service.service'
-
-export interface Todo {
-  id: string
-  title: string
-  addedDate: string
-  order: number
-}
-
-interface CreateTodoResponse {
-  data: {
-    item: Todo
-  }
-  messages: string[]
-  fieldErrors: string[]
-  resultCode: number
-}
-
-interface RemoveTodoResponse {
-  data: {}
-  messages: string[]
-  fieldErrors: string[]
-  resultCode: number
-}
-
-interface BaseResponse<T = {}> {
-  data: T
-  messages: string[]
-  fieldErrors: string[]
-  resultCode: number
-}
+import { BehaviorSubject, catchError, EMPTY, map } from 'rxjs'
+import { environment } from '../../../environments/environment.prod'
+import { BeatyLoggerServiceService } from '../../core/services/beaty-logger-service.service'
+import { Todo } from '../models/todos.model'
+import { BaseResponse } from '../../core/models/core.model'
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodosService {
-  httpOptions = {
-    withCredentials: true,
-    headers: {
-      'api-key': environment.apiKey,
-    },
-  }
   todos$ = new BehaviorSubject<Todo[]>([])
 
   constructor(
@@ -53,7 +19,7 @@ export class TodosService {
 
   getTodos() {
     this.http
-      .get<Todo[]>(`${environment.baseUrl}/todo-lists`, this.httpOptions)
+      .get<Todo[]>(`${environment.baseUrl}/todo-lists`)
       .pipe(catchError(this.errorHandler.bind(this)))
       .subscribe(result => {
         this.todos$.next(result)
@@ -62,11 +28,7 @@ export class TodosService {
 
   createTodo(title: string) {
     this.http
-      .post<BaseResponse<{ item: Todo }>>(
-        `${environment.baseUrl}/todo-lists`,
-        { title },
-        this.httpOptions
-      )
+      .post<BaseResponse<{ item: Todo }>>(`${environment.baseUrl}/todo-lists`, { title })
       .pipe(
         catchError(this.errorHandler.bind(this)),
         map(result => {
@@ -80,7 +42,7 @@ export class TodosService {
 
   deleteTodo(todoId: string) {
     this.http
-      .delete<BaseResponse>(`${environment.baseUrl}/todo-lists/${todoId}`, this.httpOptions)
+      .delete<BaseResponse>(`${environment.baseUrl}/todo-lists/${todoId}`)
       .pipe(
         catchError(this.errorHandler.bind(this)),
         map(() => {

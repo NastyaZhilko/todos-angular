@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { Todo, TodosService } from './services/todos.service'
-import { Observable } from 'rxjs'
+import { AuthService } from './core/services/auth.service'
 
 @Component({
   selector: 'todo-root',
@@ -9,25 +8,10 @@ import { Observable } from 'rxjs'
 })
 export class AppComponent implements OnInit {
   appTitle = 'Todolist'
-  todos$!: Observable<Todo[]>
 
-  constructor(private todosService: TodosService) {}
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
-    this.getTodos()
-    this.todos$ = this.todosService.todos$
-  }
-
-  getTodos() {
-    this.todosService.getTodos()
-  }
-
-  createTodo() {
-    const title = 'my todo'
-    this.todosService.createTodo(title)
-  }
-
-  deleteTodo(id: string) {
-    this.todosService.deleteTodo(id)
+    this.authService.authMe()
   }
 }
